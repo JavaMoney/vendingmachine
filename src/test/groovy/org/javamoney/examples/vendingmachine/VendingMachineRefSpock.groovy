@@ -1,16 +1,16 @@
-package com.example
+package org.javamoney.examples.vendingmachine
 
 import spock.lang.*
 import org.junit.Test
 
-import com.example.VendingMachine.Money
-import com.example.VendingMachine.Ticket
+import org.javamoney.examples.vendingmachine.VendingMachine.Cash
+import org.javamoney.examples.vendingmachine.VendingMachine.Ticket
 
 class SpockDataTableTest extends Specification {
 	
 	private def createWellFilledMachine() {
 		def machine = new VendingMachine()
-		Money.values().each { type ->  machine.recharge(type, 10) }
+		Cash.values().each { type ->  machine.recharge(type, 10) }
 		return machine
 	}
 	
@@ -25,13 +25,13 @@ class SpockDataTableTest extends Specification {
 			change == actChange
 	    where:
 	        tickets 			   | money 	         | change
-	        [Ticket.MINI_TICKET] | [Money.TEN_EURO]  | [(Money.FIVE_EURO)   : 1, 
-														(Money.TWO_EURO)    : 1,
-														(Money.ONE_EURO)    : 1,
-														(Money.FIFTY_CENT)  : 1]
-			[Ticket.INNER_ZONES] | [Money.FIFTY_EURO]| [(Money.TWENTY_EURO) : 2,
-														(Money.TWO_EURO)    : 2,
-														(Money.FIFTY_CENT)  : 1,
-														(Money.TEN_CENT)    : 1]
+	        [Ticket.MINI_TICKET] | [Cash.TEN_EURO]  | [(Cash.FIVE_EURO)   : 1, 
+														(Cash.TWO_EURO)    : 1,
+														(Cash.ONE_EURO)    : 1,
+														(Cash.FIFTY_CENT)  : 1]
+			[Ticket.INNER_ZONES] | [Cash.FIFTY_EURO]| [(Cash.TWENTY_EURO) : 2,
+														(Cash.TWO_EURO)    : 2,
+														(Cash.FIFTY_CENT)  : 1,
+														(Cash.TEN_CENT)    : 1]
 	}
 }

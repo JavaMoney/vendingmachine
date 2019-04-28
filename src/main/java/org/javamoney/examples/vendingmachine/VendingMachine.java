@@ -1,4 +1,4 @@
-package com.example;
+package org.javamoney.examples.vendingmachine;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ public class VendingMachine {
 		private static final long serialVersionUID = -8061913345859455513L;
     }
 
-    static enum Money {
+    static enum Cash {
         FIVE_HUNDRED_EURO(50000),
         TWO_HUNDRED_EURO(20000),
         ONE_HUNDRED_EURO(10000),
@@ -36,7 +36,7 @@ public class VendingMachine {
 
         private final int value;
 
-        Money(int value) {
+        Cash(int value) {
             this.value = value;
         }
 
@@ -59,11 +59,11 @@ public class VendingMachine {
         }
     }
 
-    private Map<Money, Integer> cashBox = new EnumMap<Money, Integer>(Money.class);
-    private Map<Ticket, Integer> selectedTickets = new EnumMap<Ticket, Integer>(Ticket.class);
+    private Map<Cash, Integer> cashBox = new EnumMap<>(Cash.class);
+    private Map<Ticket, Integer> selectedTickets = new EnumMap<>(Ticket.class);
 
     public VendingMachine() {
-        for (Money type : Money.values()) {
+        for (Cash type : Cash.values()) {
             cashBox.put(type, 0);
         }
     }
@@ -77,7 +77,7 @@ public class VendingMachine {
      * @param coinOrNote Type of coin/note
      * @param amount Amount of coins/notes
      */  
-    public void recharge(Money coinOrNote, int amount) {
+    public void recharge(Cash coinOrNote, int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException(
                     "Amount for rechage must be greater than zero");
@@ -91,7 +91,7 @@ public class VendingMachine {
      * @param coinOrNote Type of coin/note
      * @return
      */
-    public int getAvailableAmount(Money coinOrNote) {
+    public int getAvailableAmount(Cash coinOrNote) {
         return cashBox.get(coinOrNote);
     }
 
@@ -99,14 +99,14 @@ public class VendingMachine {
      * User inserts a coin/note to pay his ticket.
      * @param coinOrNote Type of coin/note
      */
-    public void insertMoney(Money coinOrNote) {
+    public void insertMoney(Cash coinOrNote) {
     	if (hasBeenPaid) {
         	throw new IllegalStateException("Can't add a ticket after a transaction has been finished");
         }
     	addMoneyToCashbox(coinOrNote);
     }
     
-    private void addMoneyToCashbox(Money coinOrNote) {
+    private void addMoneyToCashbox(Cash coinOrNote) {
     	Integer currentAmount = cashBox.get(coinOrNote);
         cashBox.put(coinOrNote, currentAmount + 1);
         paidSum += coinOrNote.getValue();
@@ -146,20 +146,20 @@ public class VendingMachine {
      * Prerequisite: User has selected its desired tickets and should have already inserted money.
      * @return The change
      */
-    public Map<Money, Integer> buy() throws NotEnoughChangeException, InsufficentPaymentException {
-        Map<Money, Integer> change = calcChangeForTicket();
+    public Map<Cash, Integer> buy() throws NotEnoughChangeException, InsufficentPaymentException {
+        Map<Cash, Integer> change = calcChangeForTicket();
         hasBeenPaid = true;
         paidSum = 0;        
         return change;
     }
 
-    private Map<Money, Integer> calcChangeForTicket() throws NotEnoughChangeException, InsufficentPaymentException {
+    private Map<Cash, Integer> calcChangeForTicket() throws NotEnoughChangeException, InsufficentPaymentException {
         int totalPrice = sumSelectedTicketPrices();
         if (paidSum < totalPrice) {
         	throw new InsufficentPaymentException();
         }
         int remainingSum = paidSum - totalPrice;
-        Map<Money, Integer> change = calcChangeOrRefund(remainingSum);
+        Map<Cash, Integer> change = calcChangeOrRefund(remainingSum);
         removeFromCashbox(change);
         return change;
     }
@@ -172,9 +172,9 @@ public class VendingMachine {
         return totalPrice;
     }
 
-    private Map<Money, Integer> calcChangeOrRefund(int remainingSum) throws NotEnoughChangeException {
-        Map<Money, Integer> change = new EnumMap<Money, Integer>(Money.class);
-        for (Money type : Money.values()) {
+    private Map<Cash, Integer> calcChangeOrRefund(int remainingSum) throws NotEnoughChangeException {
+        Map<Cash, Integer> change = new EnumMap<Cash, Integer>(Cash.class);
+        for (Cash type : Cash.values()) {
             int amount = calcMaxAmountOfMoneySmallerThan(type, remainingSum);
             if (amount > 0) {
                 change.put(type, amount);
@@ -187,15 +187,15 @@ public class VendingMachine {
         return change;
     }
     
-    private void removeFromCashbox(Map<Money, Integer> notesAndCoins) {
-    	for (Money noteOrCoin : notesAndCoins.keySet()) {
+    private void removeFromCashbox(Map<Cash, Integer> notesAndCoins) {
+    	for (Cash noteOrCoin : notesAndCoins.keySet()) {
     		int current = cashBox.get(noteOrCoin);
     		int diff = notesAndCoins.get(noteOrCoin);
     		cashBox.put(noteOrCoin, current - diff);
     	}
     }
 
-    private int calcMaxAmountOfMoneySmallerThan(Money type, int sum) {
+    private int calcMaxAmountOfMoneySmallerThan(Cash type, int sum) {
         return Math.min(sum / type.getValue(), cashBox.get(type));
     }
 
@@ -220,20 +220,20 @@ public class VendingMachine {
      * @throws IllegalStateException
      * @return Refund
      */    
-    public Map<Money, Integer> cancel() {
-    	Map<Money, Integer> refund = calcRefund();
+    public Map<Cash, Integer> cancel() {
+    	Map<Cash, Integer> refund = calcRefund();
         paidSum = 0;
         selectedTickets.clear();
         removeFromCashbox(refund);
         return refund;
     }
     
-    private Map<Money, Integer> calcRefund() {
+    private Map<Cash, Integer> calcRefund() {
         if (hasBeenPaid) {
         	throw new IllegalStateException("Cancel is not possible after a ticket has been bought (and not been fetched)");
         } 
         try {
-        	Map<Money, Integer> refund = calcChangeOrRefund(paidSum);
+        	Map<Cash, Integer> refund = calcChangeOrRefund(paidSum);
         	return refund;
         } catch(NotEnoughChangeException ex) {
         	throw new IllegalStateException("Vending machine didn't had enough money to refund user", ex);
