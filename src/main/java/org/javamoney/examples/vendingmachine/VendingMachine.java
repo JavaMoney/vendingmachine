@@ -74,16 +74,16 @@ public class VendingMachine {
     /**
      * Refills the vending machine by adding the 
      * given amount of money to the its cashbox.
-     * @param coinOrNote Type of coin/note
+     * @param cash Type of coin/note
      * @param amount Amount of coins/notes
      */  
-    public void recharge(Cash coinOrNote, int amount) {
+    public void recharge(Cash cash, int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException(
                     "Amount for rechage must be greater than zero");
         }
-        Integer currentAmount = cashBox.get(coinOrNote);
-        cashBox.put(coinOrNote, currentAmount + amount);
+        Integer currentAmount = cashBox.get(cash);
+        cashBox.put(cash, currentAmount + amount);
     }
 
     /**
