@@ -11,7 +11,7 @@ public class VendingMachine {
 		private static final long serialVersionUID = -7029912938545985254L;
 
 		public NotPaidException() {
-			super("");
+			super("No payment was made");
 		}
 	}
 
@@ -66,7 +66,7 @@ public class VendingMachine {
 	private boolean hasBeenPaid = false;
 
 	/**
-	 * Refills the vending machine by adding the given amount of money to the its
+	 * Refills the vending machine by adding the given amount of money to its
 	 * cashbox.
 	 * 
 	 * @param cash   Type of coin/note
