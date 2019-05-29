@@ -17,8 +17,8 @@ public class VendingMachineTest {
 
 	private VendingMachine createWellFilledMachine() {
 		VendingMachine machine = new VendingMachine();
-		for (Cash type : Cash.values()) {
-			machine.recharge(type, 10);
+		for (Cash cash : Cash.values()) {
+			machine.recharge(cash, 10);
 		}
 		return machine;
 	}
