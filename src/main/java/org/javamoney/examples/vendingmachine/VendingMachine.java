@@ -172,7 +172,7 @@ public class VendingMachine {
 	}
 
 	private Map<Cash, Integer> calcChangeOrRefund(int remainingSum) throws NotEnoughChangeException {
-		Map<Cash, Integer> change = new EnumMap<Cash, Integer>(Cash.class);
+		Map<Cash, Integer> change = new EnumMap<>(Cash.class);
 		for (Cash type : Cash.values()) {
 			int amount = calcMaxAmountOfMoneySmallerThan(type, remainingSum);
 			if (amount > 0) {
@@ -210,7 +210,7 @@ public class VendingMachine {
 		}
 		hasBeenPaid = false;
 		Map<Ticket, Integer> order = selectedTickets;
-		selectedTickets = new EnumMap<Ticket, Integer>(Ticket.class);
+		selectedTickets = new EnumMap<>(Ticket.class);
 		return order;
 	}
 

@@ -43,12 +43,12 @@ public class VendingMachineTest {
 		machine.selectTicket(Ticket.INNER_ZONES);
 		machine.insertMoney(Cash.TEN_EURO);
 		Map<Cash, Integer> change = machine.buy();
-		EnumMap<Cash, Integer> expMoney = new EnumMap<Cash, Integer>(Cash.class);
+		EnumMap<Cash, Integer> expMoney = new EnumMap<>(Cash.class);
 		expMoney.put(Cash.TWO_EURO, 2);
 		expMoney.put(Cash.FIFTY_CENT, 1);
 		expMoney.put(Cash.TEN_CENT, 1);
 		assertEquals(expMoney, change);
-		EnumMap<Ticket, Integer> expTickets = new EnumMap<Ticket, Integer>(Ticket.class);
+		EnumMap<Ticket, Integer> expTickets = new EnumMap<>(Ticket.class);
 		expTickets.put(Ticket.INNER_ZONES, 1);
 		assertEquals(expTickets, machine.takeTickets());
 
@@ -71,9 +71,9 @@ public class VendingMachineTest {
 		machine.insertMoney(Cash.TEN_CENT);
 		machine.insertMoney(Cash.TEN_CENT);
 		Map<Cash, Integer> change = machine.buy();
-		EnumMap<Cash, Integer> expMoney = new EnumMap<Cash, Integer>(Cash.class);
+		EnumMap<Cash, Integer> expMoney = new EnumMap<>(Cash.class);
 		assertEquals(expMoney, change);
-		EnumMap<Ticket, Integer> expTickets = new EnumMap<Ticket, Integer>(Ticket.class);
+		EnumMap<Ticket, Integer> expTickets = new EnumMap<>(Ticket.class);
 		expTickets.put(Ticket.ALL_ZONES, 1);
 		assertEquals(expTickets, machine.takeTickets());
 	}
@@ -92,7 +92,7 @@ public class VendingMachineTest {
 		machine.selectTicket(Ticket.INNER_ZONES);
 		machine.insertMoney(Cash.TEN_EURO);
 		Map<Cash, Integer> refund = machine.cancel();
-		EnumMap<Cash, Integer> expMoney = new EnumMap<Cash, Integer>(Cash.class);
+		EnumMap<Cash, Integer> expMoney = new EnumMap<>(Cash.class);
 		expMoney.put(Cash.TEN_EURO, 1);
 		assertEquals(expMoney, refund);
 		assertEquals(0, machine.getCurrentPrice());
