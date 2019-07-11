@@ -62,7 +62,7 @@ public class VendingMachine {
 		}
 	}
 
-	private int paidSum = 0;
+	private int paidAmount = 0;
 	private boolean hasBeenPaid = false;
 
 	/**
@@ -105,7 +105,7 @@ public class VendingMachine {
 	private void addMoneyToCashbox(Cash coinOrNote) {
 		Integer currentAmount = cashBox.get(coinOrNote);
 		cashBox.put(coinOrNote, currentAmount + 1);
-		paidSum += coinOrNote.getValue();
+		paidAmount += coinOrNote.getValue();
 	}
 
 	/**
@@ -133,8 +133,8 @@ public class VendingMachine {
 		return sumSelectedTicketPrices();
 	}
 
-	public int getPaidSum() {
-		return paidSum;
+	public int getPaidAmount() {
+		return paidAmount;
 	}
 
 	/**
@@ -148,16 +148,16 @@ public class VendingMachine {
 	public Map<Cash, Integer> buy() throws NotEnoughChangeException, InsufficentPaymentException {
 		Map<Cash, Integer> change = calcChangeForTicket();
 		hasBeenPaid = true;
-		paidSum = 0;
+		paidAmount = 0;
 		return change;
 	}
 
 	private Map<Cash, Integer> calcChangeForTicket() throws NotEnoughChangeException, InsufficentPaymentException {
 		int totalPrice = sumSelectedTicketPrices();
-		if (paidSum < totalPrice) {
+		if (paidAmount < totalPrice) {
 			throw new InsufficentPaymentException();
 		}
-		int remainingSum = paidSum - totalPrice;
+		int remainingSum = paidAmount - totalPrice;
 		Map<Cash, Integer> change = calcChangeOrRefund(remainingSum);
 		removeFromCashbox(change);
 		return change;
@@ -223,7 +223,7 @@ public class VendingMachine {
 	 */
 	public Map<Cash, Integer> cancel() {
 		Map<Cash, Integer> refund = calcRefund();
-		paidSum = 0;
+		paidAmount = 0;
 		selectedTickets.clear();
 		removeFromCashbox(refund);
 		return refund;
@@ -235,7 +235,7 @@ public class VendingMachine {
 					"Cancel is not possible after a ticket has been bought (and not been fetched)");
 		}
 		try {
-			Map<Cash, Integer> refund = calcChangeOrRefund(paidSum);
+			Map<Cash, Integer> refund = calcChangeOrRefund(paidAmount);
 			return refund;
 		} catch (NotEnoughChangeException ex) {
 			throw new IllegalStateException("Vending machine didn't had enough money to refund user", ex);

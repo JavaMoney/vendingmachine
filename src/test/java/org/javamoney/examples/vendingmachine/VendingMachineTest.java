@@ -96,7 +96,7 @@ public class VendingMachineTest {
 		expMoney.put(Cash.TEN_EURO, 1);
 		assertEquals(expMoney, refund);
 		assertEquals(0, machine.getCurrentPrice());
-		assertEquals(0, machine.getPaidSum());
+		assertEquals(0, machine.getPaidAmount());
 	}
 
 	@Test(expected = NotEnoughChangeException.class)
